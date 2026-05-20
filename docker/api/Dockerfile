@@ -1,6 +1,15 @@
-FROM serversideup/php:8.2-fpm
+FROM php:8.2-fpm
 
-RUN install-php-extensions pdo_pgsql pgsql mbstring exif gd zip json
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    git \
+    curl \
+    libzip-dev \
+    libpng-dev \
+    libxml2-dev \
+    unzip \
+    && rm -rf /var/lib/apt/lists/* \
+    && docker-php-ext-install pdo pdo_pgsql mbstring exif gd zip json
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
