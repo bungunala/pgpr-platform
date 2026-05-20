@@ -1,19 +1,22 @@
-FROM php:8.2-fpm
+FROM php:8.2-fpm-alpine
 
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
+ENV PHP_INI_SCAN_DIR=/opt/php/conf.d:/usr/local/etc/php/conf.d
+
+COPY --from=dockerphpext/pdo_pgsql:php8.2-alpine /opt/php/ /opt/php/
+
+RUN apk add --no-cache \
     git \
     curl \
     libzip-dev \
     libpng-dev \
     libxml2-dev \
-    unzip \
-    && rm -rf /var/lib/apt/lists/* \
-    && docker-php-ext-install pdo pdo_pgsql mbstring exif gd zip json
+    unzip
+
+RUN docker-php-ext-install mbstring exif gd zip json
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-RUN useradd -m -u 1000 -s /bin/bash www-data \
+RUN adduser -D -u 1000 -g 'www-data' -s /bin/sh www-data \
     && mkdir -p /var/www/html/writable /var/www/html/writable/uploads \
     && chown -R www-data:www-data /var/www/html
 
