@@ -32,7 +32,7 @@ class App extends BaseConfig
 
     public $sessionExpiration = 7200;
 
-    public $session regenerate = true;
+    public $sessionRegenerate = true;
 
     public $session_regenerate = true;
 
