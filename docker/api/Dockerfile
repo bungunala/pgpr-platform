@@ -1,23 +1,21 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.2-fpm
 
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     git \
     curl \
+    libzip-dev \
     libpng-dev \
     libxml2-dev \
-    zip \
+    libpq-dev \
     unzip \
-    postgresql-dev \
-    linux-headers \
-    $PHPIZE_DEPS
+    && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-configure pdo_pgsql \
-    && docker-php-ext-install pdo_pgsql mbstring exif gd zip json
+RUN docker-php-ext-install pdo_pgsql mbstring exif gd zip json
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-RUN adduser -D -u 1000 -g 'www-data' -s /bin/sh www-data
-RUN mkdir -p /var/www/html/writable /var/www/html/writable/uploads \
+RUN useradd -m -u 1000 -s /bin/bash www-data \
+    && mkdir -p /var/www/html/writable /var/www/html/writable/uploads \
     && chown -R www-data:www-data /var/www/html
 
 WORKDIR /var/www/html
