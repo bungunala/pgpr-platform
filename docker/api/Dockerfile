@@ -11,7 +11,8 @@ RUN apk add --no-cache \
     linux-headers \
     $PHPIZE_DEPS
 
-RUN docker-php-ext-install pdo pdo_pgsql pgsql mbstring exif gd zip
+RUN docker-php-ext-configure pdo_pgsql \
+    && docker-php-ext-install pdo_pgsql mbstring exif gd zip json
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 

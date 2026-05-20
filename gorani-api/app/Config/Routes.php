@@ -5,6 +5,11 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+$routes->setDefaultNamespace('App\Controllers');
+$routes->setDefaultController('Home');
+$routes->setDefaultMethod('index');
+$routes->setAutoRoute(false);
+
 $routes->group('api', function ($routes) {
     
     // Public routes
@@ -70,19 +75,3 @@ $routes->group('api', function ($routes) {
         $routes->get('admin/events/(:num)/reports/agenda', 'Api\AdminController::getAgendaReport/$1');
     });
 });
-
-// BaseController
-namespace App\Controllers;
-
-use CodeIgniter\Controller;
-
-class BaseController extends Controller
-{
-    protected $db;
-
-    public function initController(\CodeIgniter\HTTP\RequestInterface $request, \CodeIgniter\HTTP\ResponseInterface $response, \Psr\Log\LoggerInterface $logger)
-    {
-        parent::initController($request, $response, $logger);
-        $this->db = \Config\Database::connect();
-    }
-}
