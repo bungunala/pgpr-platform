@@ -1,0 +1,32 @@
+# ============================================
+# BASE DE DATOS - PostgreSQL
+# ============================================
+DB_DATABASE=pgpr_platform
+DB_USERNAME=pgpr_user
+DB_PASSWORD=pgpr_dev_password
+
+# Puertos
+API_PORT=8080
+WEB_PORT=3000
+DB_PORT=5432
+REDIS_PORT=6379
+
+# ============================================
+# JWT - Autenticacion
+# ============================================
+JWT_SECRET=change-this-to-a-random-secret-key-in-production
+JWT_EXPIRY=86400
+
+# ============================================
+# EMAIL - SMTP
+# ============================================
+SMTP_HOST=mail.proecuador.gob.ec
+SMTP_PORT=587
+SMTP_USER=macrorruedaecuador@proecuador.gob.ec
+SMTP_PASS=your-smtp-password
+
+# ============================================
+# APP
+# ============================================
+CI_ENVIRONMENT=development
+BASE_URL=http://localhost:3000

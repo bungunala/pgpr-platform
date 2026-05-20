@@ -1,0 +1,33 @@
+{
+    "name": "pgpr/gorani-api",
+    "type": "project",
+    "description": "PGPR Platform API - CodeIgniter 4",
+    "license": "MIT",
+    "require": {
+        "php": "^8.0",
+        "codeigniter4/framework": "^4.4",
+        "firebase/php-jwt": "^6.10",
+        "ramsey/uuid": "^4.7",
+        "phpoffice/phpexcel": "^1.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "fakerphp/faker": "^1.23"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "serve": "php spark serve"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

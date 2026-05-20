@@ -1,0 +1,82 @@
+version: '3.8'
+
+services:
+  # Backend API - CodeIgniter 4
+  api:
+    build:
+      context: ./gorani-api
+      dockerfile: ../docker/api/Dockerfile
+    container_name: pgpr-api
+    restart: unless-stopped
+    ports:
+      - "${API_PORT:-8080}:8080"
+    environment:
+      - CI_ENVIRONMENT=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRY=${JWT_EXPIRY:-86400}
+      - SMTP_HOST=${SMTP_HOST:-mail.proecuador.gob.ec}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - BASE_URL=${BASE_URL:-http://localhost:3000}
+    volumes:
+      - ./gorani-api:/var/www/html
+      - api-uploads:/var/www/html/writable/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # Frontend - Vue.js 3
+  web:
+    build:
+      context: ./gorani-web
+      dockerfile: ../docker/web/Dockerfile
+    container_name: pgpr-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-3000}:80"
+    depends_on:
+      - api
+
+  # Base de datos - PostgreSQL 16
+  postgres:
+    image: postgres:16-alpine
+    container_name: pgpr-postgres
+    restart: unless-stopped
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis - Cache/Sesiones
+  redis:
+    image: redis:7-alpine
+    container_name: pgpr-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis-data:/data
+
+networks:
+  default:
+    name: pgpr-network
+
+volumes:
+  postgres-data:
+  redis-data:
+  api-uploads:
