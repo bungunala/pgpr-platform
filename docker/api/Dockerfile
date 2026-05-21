@@ -24,8 +24,7 @@ RUN docker-php-ext-install gd
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-RUN adduser -D -u 1000 -g 'www-data' -s /bin/sh www-data \
-    && mkdir -p /var/www/html/writable /var/www/html/writable/uploads \
+RUN mkdir -p /var/www/html/writable /var/www/html/writable/uploads \
     && chown -R www-data:www-data /var/www/html
 
 WORKDIR /var/www/html
