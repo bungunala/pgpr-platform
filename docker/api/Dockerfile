@@ -10,9 +10,12 @@ RUN apk add --no-cache \
     libzip-dev \
     libpng-dev \
     libxml2-dev \
+    libjpeg-turbo-dev \
+    freetype-dev \
     unzip
 
-RUN docker-php-ext-install mbstring exif gd zip json
+RUN docker-php-ext-configure gd --with-jpeg --with-freetype \
+    && docker-php-ext-install mbstring exif gd zip
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
