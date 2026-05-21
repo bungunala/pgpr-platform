@@ -15,12 +15,14 @@ RUN apk add --no-cache \
     libwebp-dev \
     libxpm-dev \
     oniguruma-dev \
+    icu-dev \
     unzip
 
 RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install exif
 RUN docker-php-ext-install zip
 RUN docker-php-ext-install gd
+RUN docker-php-ext-install intl
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
